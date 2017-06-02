@@ -13,7 +13,7 @@ import com.arvin.demo.retrofitrxjavamvptest.view.IBlogView;
  * Created by arvin on 2017/5/27.
  */
 
-public class BlogFragment extends BaseFragment implements IBlogView {
+public class BlogFragment extends BaseFragment<IBlogView, BlogPressenter> implements IBlogView {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class BlogFragment extends BaseFragment implements IBlogView {
     }
 
     @Override
-    public BasePressenter createPressenter() {
+    public BlogPressenter createPressenter() {
         return new BlogPressenter();
     }
 

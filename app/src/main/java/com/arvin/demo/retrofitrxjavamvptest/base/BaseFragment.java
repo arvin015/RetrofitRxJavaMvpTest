@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 
 public abstract class BaseFragment<V, P extends BasePressenter<V>> extends Fragment {
 
-    private P pressenter;
+    public P pressenter;
     private SwipeRefreshLayout refreshLayout;
 
     @Override

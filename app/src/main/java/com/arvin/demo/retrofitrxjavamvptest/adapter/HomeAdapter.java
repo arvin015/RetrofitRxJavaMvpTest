@@ -22,6 +22,14 @@ import butterknife.ButterKnife;
 
 public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_FOOTVIEW = 1;
+
+    public static final int LOAD_MORE = 0;
+    public static final int LOADING_MORE = 1;
+
+    private int currentState = 0;
+
     private Context context;
     private ArrayList<String> testList;
 
@@ -32,20 +40,41 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.home_item, null);
-        return new HomeViewHolder(view);
+        RecyclerView.ViewHolder viewHolder = null;
+        if (viewType == VIEW_TYPE_ITEM) {
+            viewHolder = new HomeViewHolder(LayoutInflater.from(context).inflate(R.layout.home_item, null));
+        } else if (viewType == VIEW_TYPE_FOOTVIEW) {
+            viewHolder = new FootViewHolder(LayoutInflater.from(context).inflate(R.layout.footview, null));
+        }
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof HomeViewHolder) {
             ((HomeViewHolder) holder).bindData(testList.get(position));
+        } else if (holder instanceof FootViewHolder) {
+            ((FootViewHolder) holder).update(currentState);
         }
     }
 
     @Override
     public int getItemCount() {
-        return testList.size();
+        return testList.size() + 1;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == getItemCount() - 1) {
+            return VIEW_TYPE_FOOTVIEW;
+        } else {
+            return VIEW_TYPE_ITEM;
+        }
+    }
+
+    public void changeFootViewState(int state) {
+        currentState = state;
+        notifyDataSetChanged();
     }
 
     class HomeViewHolder extends RecyclerView.ViewHolder {
@@ -76,6 +105,29 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Toast.makeText(context, "点击了" + value, Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+    }
+
+    class FootViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.loadMoreText)
+        TextView loadMoreText;
+
+        public FootViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+
+            LinearLayoutCompat.LayoutParams lp = new LinearLayoutCompat.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            itemView.setLayoutParams(lp);
+        }
+
+        public void update(int state) {
+            if (state == LOAD_MORE) {
+                loadMoreText.setText("加载更多...");
+            } else if (state == LOADING_MORE) {
+                loadMoreText.setText("正在加载更多...");
+            }
         }
     }
 }

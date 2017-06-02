@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         toolBar.setTitle("李子");
         setSupportActionBar(toolBar);
 
-        toolBar.setNavigationIcon(R.mipmap.ic_launcher);
+        toolBar.setNavigationIcon(R.drawable.ic_navigation);
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

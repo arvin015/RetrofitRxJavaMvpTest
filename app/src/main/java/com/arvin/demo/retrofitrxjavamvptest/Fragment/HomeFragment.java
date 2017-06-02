@@ -12,7 +12,6 @@ import com.arvin.demo.retrofitrxjavamvptest.R;
 import com.arvin.demo.retrofitrxjavamvptest.adapter.DividerItemDecoration;
 import com.arvin.demo.retrofitrxjavamvptest.adapter.HomeAdapter;
 import com.arvin.demo.retrofitrxjavamvptest.base.BaseFragment;
-import com.arvin.demo.retrofitrxjavamvptest.base.BasePressenter;
 import com.arvin.demo.retrofitrxjavamvptest.pressenter.HomePressenter;
 import com.arvin.demo.retrofitrxjavamvptest.view.IHomeView;
 
@@ -21,19 +20,12 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by arvin on 2017/5/27.
  */
 
-public class HomeFragment extends BaseFragment implements IHomeView {
+public class HomeFragment extends BaseFragment<IHomeView, HomePressenter> implements IHomeView {
 
     @BindView(R.id.homeRecycleView)
     RecyclerView homeRecycleView;
@@ -41,6 +33,8 @@ public class HomeFragment extends BaseFragment implements IHomeView {
 
     private ArrayList<String> dataList;
     private HomeAdapter adapter;
+
+    private boolean isLoadingMore = false;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -57,7 +51,7 @@ public class HomeFragment extends BaseFragment implements IHomeView {
             dataList.add("test" + (i + 1));
         }
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         homeRecycleView.setLayoutManager(layoutManager);
 
         adapter = new HomeAdapter(getContext(), dataList);
@@ -65,32 +59,37 @@ public class HomeFragment extends BaseFragment implements IHomeView {
 
         homeRecycleView.addItemDecoration(new DividerItemDecoration(getContext(),
                 DividerItemDecoration.VERTICAL_LIST));
+
+        homeRecycleView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            int lastVisibleItemPosition = 0;
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE &&
+                        (lastVisibleItemPosition + 1 == adapter.getItemCount())) {
+                    if (!isLoadingMore) {
+                        adapter.changeFootViewState(HomeAdapter.LOADING_MORE);
+                        setRefreshing();
+                        isLoadingMore = true;
+                    }
+
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+            }
+        });
     }
 
     @Override
     public void setRefreshing() {
-
-        Observable.create(new ObservableOnSubscribe<ArrayList<String>>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<ArrayList<String>> e) throws Exception {
-                Thread.sleep(2000);
-                ArrayList<String> addList = new ArrayList<>();
-                for (int i = 0; i < 20; i++) {
-                    addList.add("add" + (i + 1));
-                }
-                e.onNext(addList);
-                e.onComplete();
-            }
-        }).subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ArrayList<String>>() {
-                    @Override
-                    public void accept(@NonNull ArrayList<String> list) throws Exception {
-                        dataList.addAll(list);
-                        adapter.notifyDataSetChanged();
-                        setCompleteRefresh();
-                    }
-                });
+        if (pressenter != null) {
+            pressenter.getMainInfos(1);
+        }
     }
 
     @Override
@@ -99,7 +98,7 @@ public class HomeFragment extends BaseFragment implements IHomeView {
     }
 
     @Override
-    public BasePressenter createPressenter() {
+    public HomePressenter createPressenter() {
         return new HomePressenter();
     }
 
@@ -111,6 +110,14 @@ public class HomeFragment extends BaseFragment implements IHomeView {
     @Override
     public void hideLoading() {
 
+    }
+
+    @Override
+    public void returnMainInfos(ArrayList<String> infoList) {
+        dataList.addAll(infoList);
+        setCompleteRefresh();
+        adapter.changeFootViewState(HomeAdapter.LOAD_MORE);
+        isLoadingMore = false;
     }
 
     @Override
@@ -126,4 +133,5 @@ public class HomeFragment extends BaseFragment implements IHomeView {
         super.onDestroyView();
         unbinder.unbind();
     }
+
 }

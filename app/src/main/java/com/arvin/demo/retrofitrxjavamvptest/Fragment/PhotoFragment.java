@@ -13,7 +13,7 @@ import com.arvin.demo.retrofitrxjavamvptest.view.IPhotoView;
  * Created by arvin on 2017/5/27.
  */
 
-public class PhotoFragment extends BaseFragment implements IPhotoView {
+public class PhotoFragment extends BaseFragment<IPhotoView, PhotoPressenter> implements IPhotoView {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class PhotoFragment extends BaseFragment implements IPhotoView {
     }
 
     @Override
-    public BasePressenter createPressenter() {
+    public PhotoPressenter createPressenter() {
         return new PhotoPressenter();
     }
 
