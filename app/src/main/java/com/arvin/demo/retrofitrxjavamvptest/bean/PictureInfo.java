@@ -10,6 +10,11 @@ public class PictureInfo {
     private String intro;
     private String path;
 
+    public PictureInfo(String path, String intro) {
+        this.path = path;
+        this.intro = intro;
+    }
+
     public int getId() {
         return id;
     }

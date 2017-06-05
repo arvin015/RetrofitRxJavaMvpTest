@@ -12,6 +12,7 @@ import com.arvin.demo.retrofitrxjavamvptest.R;
 import com.arvin.demo.retrofitrxjavamvptest.adapter.DividerItemDecoration;
 import com.arvin.demo.retrofitrxjavamvptest.adapter.HomeAdapter;
 import com.arvin.demo.retrofitrxjavamvptest.base.BaseFragment;
+import com.arvin.demo.retrofitrxjavamvptest.bean.PictureInfo;
 import com.arvin.demo.retrofitrxjavamvptest.pressenter.HomePressenter;
 import com.arvin.demo.retrofitrxjavamvptest.view.IHomeView;
 
@@ -34,6 +35,8 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePressenter> implem
     private ArrayList<String> dataList;
     private HomeAdapter adapter;
 
+    private ArrayList<PictureInfo> picList;
+
     private boolean isLoadingMore = false;
 
     @Override
@@ -54,7 +57,18 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePressenter> implem
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         homeRecycleView.setLayoutManager(layoutManager);
 
-        adapter = new HomeAdapter(getContext(), dataList);
+        picList = new ArrayList<>();
+        picList.add(new PictureInfo(
+                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496685071389&di=d48f375afe59a0f07b8d01b38a13afa2&imgtype=0&src=http%3A%2F%2Fwww.renwen.com%2Fphoto%2F11%2F343%2F1134333_1397898795990833.jpg",
+                "多肉植物1"));
+        picList.add(new PictureInfo(
+                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496685071388&di=2c92b4e248ba3940d090d17b3eb9208e&imgtype=0&src=http%3A%2F%2Fstaticqn.qizuang.com%2Fimg%2F20170420%2F58f86280562cd-s3.jpg",
+                "多肉植物2"));
+        picList.add(new PictureInfo(
+                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496685071387&di=171876b2abda10b9a873bd00a9bab2ea&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20160223%2Fmp60107766_1456203432430_4.png",
+                "多肉植物3"));
+
+        adapter = new HomeAdapter(getContext(), dataList, picList);
         homeRecycleView.setAdapter(adapter);
 
         homeRecycleView.addItemDecoration(new DividerItemDecoration(getContext(),

@@ -10,8 +10,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arvin.demo.retrofitrxjavamvptest.R;
+import com.arvin.demo.retrofitrxjavamvptest.bean.PictureInfo;
+import com.arvin.demo.retrofitrxjavamvptest.widget.PictureRollView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +27,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_FOOTVIEW = 1;
+    private final int VIEW_TYPE_TOP = 2;
 
     public static final int LOAD_MORE = 0;
     public static final int LOADING_MORE = 1;
@@ -32,10 +36,12 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private ArrayList<String> testList;
+    private ArrayList<PictureInfo> picList;
 
-    public HomeAdapter(Context context, ArrayList<String> testList) {
+    public HomeAdapter(Context context, ArrayList<String> testList, ArrayList<PictureInfo> picList) {
         this.context = context;
         this.testList = testList;
+        this.picList = picList;
     }
 
     @Override
@@ -43,6 +49,8 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         RecyclerView.ViewHolder viewHolder = null;
         if (viewType == VIEW_TYPE_ITEM) {
             viewHolder = new HomeViewHolder(LayoutInflater.from(context).inflate(R.layout.home_item, null));
+        } else if (viewType == VIEW_TYPE_TOP) {
+            viewHolder = new TopViewHolder(LayoutInflater.from(context).inflate(R.layout.main_topview, null));
         } else if (viewType == VIEW_TYPE_FOOTVIEW) {
             viewHolder = new FootViewHolder(LayoutInflater.from(context).inflate(R.layout.footview, null));
         }
@@ -51,7 +59,9 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof HomeViewHolder) {
+        if (holder instanceof TopViewHolder) {
+            ((TopViewHolder) holder).bindData(picList);
+        } else if (holder instanceof HomeViewHolder) {
             ((HomeViewHolder) holder).bindData(testList.get(position));
         } else if (holder instanceof FootViewHolder) {
             ((FootViewHolder) holder).update(currentState);
@@ -60,12 +70,14 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return testList.size() + 1;
+        return testList.size() + 2;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == getItemCount() - 1) {
+        if (position == 0) {
+            return VIEW_TYPE_TOP;
+        } else if (position == getItemCount() - 1) {
             return VIEW_TYPE_FOOTVIEW;
         } else {
             return VIEW_TYPE_ITEM;
@@ -75,6 +87,21 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void changeFootViewState(int state) {
         currentState = state;
         notifyDataSetChanged();
+    }
+
+    class TopViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.topViewPager)
+        PictureRollView topViewPager;
+
+        public TopViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        public void bindData(List<PictureInfo> pictureInfoList) {
+            topViewPager.initData(pictureInfoList);
+        }
     }
 
     class HomeViewHolder extends RecyclerView.ViewHolder {

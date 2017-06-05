@@ -29,6 +29,7 @@ public class PictureRollView extends RelativeLayout {
     private List<PictureInfo> pictureList;
     private ViewPager picViewPager;
     private LinearLayout dotLayout;
+    private ImageView selectedDotImg;
 
     public PictureRollView(Context context) {
         super(context, null);
@@ -60,7 +61,7 @@ public class PictureRollView extends RelativeLayout {
         addView(dotLayout);
     }
 
-    private void initData(List<PictureInfo> pictureList) {
+    public void initData(List<PictureInfo> pictureList) {
         this.pictureList = pictureList;
 
         viewList = new ArrayList<>();
@@ -76,6 +77,7 @@ public class PictureRollView extends RelativeLayout {
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.addRule(CENTER_IN_PARENT);
             imageView.setLayoutParams(lp);
+            viewList.add(imageView);
 
             Glide.with(context)
                     .load(pictureInfo.getPath())
@@ -84,6 +86,7 @@ public class PictureRollView extends RelativeLayout {
             ImageView dotImg = new ImageView(context);
             if (i == 0) {
                 dotImg.setImageResource(R.drawable.dot_selected);
+                selectedDotImg = dotImg;
             } else {
                 dotImg.setImageResource(R.drawable.dot_normal);
             }
@@ -93,11 +96,30 @@ public class PictureRollView extends RelativeLayout {
                 params.leftMargin = 10;
             }
             dotImg.setLayoutParams(params);
+            dotList.add(dotImg);
             dotLayout.addView(dotImg);
 
         }
 
         picViewPager.setAdapter(new PicPagerAdapter());
+        picViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                ImageView dotImg = dotList.get(position);
+                dotImg.setImageResource(R.drawable.dot_selected);
+                selectedDotImg.setImageResource(R.drawable.dot_normal);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     class PicPagerAdapter extends PagerAdapter {
