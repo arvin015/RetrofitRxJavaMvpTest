@@ -1,27 +1,37 @@
 package com.arvin.demo.retrofitrxjavamvptest.widget;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.arvin.demo.retrofitrxjavamvptest.R;
 import com.arvin.demo.retrofitrxjavamvptest.bean.PictureInfo;
+import com.arvin.demo.retrofitrxjavamvptest.utils.SizeUtils;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by arvin on 2017/6/5.
  */
 
-public class PictureRollView extends RelativeLayout {
+public class PictureRollView extends FrameLayout {
+
+    private String TAG = "PictureRollView";
 
     private Context context;
     private List<ImageView> dotList;
@@ -52,9 +62,10 @@ public class PictureRollView extends RelativeLayout {
         picViewPager.setLayoutParams(lp);
 
         dotLayout = new LinearLayout(context);
-        RelativeLayout.LayoutParams dotParams = new RelativeLayout.LayoutParams(
+        dotLayout.setOrientation(LinearLayout.HORIZONTAL);
+        FrameLayout.LayoutParams dotParams = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dotParams.addRule(CENTER_HORIZONTAL | ALIGN_PARENT_BOTTOM);
+        dotParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
         dotLayout.setLayoutParams(dotParams);
 
         addView(picViewPager);
@@ -65,17 +76,19 @@ public class PictureRollView extends RelativeLayout {
         this.pictureList = pictureList;
 
         viewList = new ArrayList<>();
+        dotList = new ArrayList<>();
+        dotLayout.removeAllViews();
 
         for (int i = 0; i < pictureList.size(); i++) {
 
             PictureInfo pictureInfo = pictureList.get(i);
 
             ImageView imageView = new ImageView(context);
-            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp.addRule(CENTER_IN_PARENT);
+            lp.gravity = Gravity.CENTER;
             imageView.setLayoutParams(lp);
             viewList.add(imageView);
 
@@ -93,7 +106,7 @@ public class PictureRollView extends RelativeLayout {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             if (i != 0) {
-                params.leftMargin = 10;
+                params.leftMargin = SizeUtils.dp2px(5);
             }
             dotImg.setLayoutParams(params);
             dotList.add(dotImg);
@@ -113,6 +126,7 @@ public class PictureRollView extends RelativeLayout {
                 ImageView dotImg = dotList.get(position);
                 dotImg.setImageResource(R.drawable.dot_selected);
                 selectedDotImg.setImageResource(R.drawable.dot_normal);
+                selectedDotImg = dotImg;
             }
 
             @Override
@@ -120,6 +134,24 @@ public class PictureRollView extends RelativeLayout {
 
             }
         });
+        picViewPager.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        stopRoll();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        startAutoRoll();
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
+
+        startAutoRoll();
     }
 
     class PicPagerAdapter extends PagerAdapter {
@@ -143,6 +175,59 @@ public class PictureRollView extends RelativeLayout {
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView(viewList.get(position));
+        }
+    }
+
+    private long rollDelay = 3000;
+    private Timer timer;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 100) {
+                if (picViewPager != null) {
+                    int currentItem = picViewPager.getCurrentItem();
+                    if (currentItem == picViewPager.getChildCount()) {
+                        currentItem = 0;
+                    } else {
+                        currentItem += 1;
+                    }
+                    picViewPager.setCurrentItem(currentItem);
+                }
+            }
+        }
+    };
+
+    /**
+     * 设置广告滚动间隔时间
+     *
+     * @param rollDelay
+     */
+    public void setRollDelay(long rollDelay) {
+        this.rollDelay = rollDelay;
+    }
+
+    /**
+     * 开始滚动
+     */
+    public void startAutoRoll() {
+        stopRoll();
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.sendEmptyMessage(100);
+            }
+        }, rollDelay, rollDelay);
+    }
+
+    /**
+     * 停止滚动
+     */
+    public void stopRoll() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
         }
     }
 }

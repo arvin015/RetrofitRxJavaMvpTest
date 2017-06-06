@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import butterknife.Unbinder;
  */
 
 public class HomeFragment extends BaseFragment<IHomeView, HomePressenter> implements IHomeView {
+
+    private String TAG = "HomeFragment";
 
     @BindView(R.id.homeRecycleView)
     RecyclerView homeRecycleView;
@@ -100,6 +103,15 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePressenter> implem
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.d(TAG, "setUserVisibleHint---isVisibleToUser = " + isVisibleToUser);
+        if (adapter != null) {
+            adapter.setAutoRollEnabled(isVisibleToUser);
+        }
+    }
+
+    @Override
     public void setRefreshing() {
         if (pressenter != null) {
             pressenter.getMainInfos(1);
@@ -147,5 +159,6 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePressenter> implem
         super.onDestroyView();
         unbinder.unbind();
     }
+
 
 }

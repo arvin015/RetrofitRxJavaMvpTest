@@ -15,6 +15,7 @@ import com.arvin.demo.retrofitrxjavamvptest.Fragment.HomeFragment;
 import com.arvin.demo.retrofitrxjavamvptest.Fragment.PhotoFragment;
 import com.arvin.demo.retrofitrxjavamvptest.adapter.MainFragmentAdapter;
 import com.arvin.demo.retrofitrxjavamvptest.base.BaseFragment;
+import com.arvin.demo.retrofitrxjavamvptest.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        Utils.init(this);
 
         initToolBar();
 

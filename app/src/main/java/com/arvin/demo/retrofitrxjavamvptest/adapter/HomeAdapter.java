@@ -25,6 +25,8 @@ import butterknife.ButterKnife;
 
 public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private String TAG = "HomeAdapter";
+
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_FOOTVIEW = 1;
     private final int VIEW_TYPE_TOP = 2;
@@ -37,6 +39,8 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private ArrayList<String> testList;
     private ArrayList<PictureInfo> picList;
+
+    private TopViewHolder topViewHolder;
 
     public HomeAdapter(Context context, ArrayList<String> testList, ArrayList<PictureInfo> picList) {
         this.context = context;
@@ -51,6 +55,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             viewHolder = new HomeViewHolder(LayoutInflater.from(context).inflate(R.layout.home_item, null));
         } else if (viewType == VIEW_TYPE_TOP) {
             viewHolder = new TopViewHolder(LayoutInflater.from(context).inflate(R.layout.main_topview, null));
+            topViewHolder = (TopViewHolder) viewHolder;
         } else if (viewType == VIEW_TYPE_FOOTVIEW) {
             viewHolder = new FootViewHolder(LayoutInflater.from(context).inflate(R.layout.footview, null));
         }
@@ -62,7 +67,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (holder instanceof TopViewHolder) {
             ((TopViewHolder) holder).bindData(picList);
         } else if (holder instanceof HomeViewHolder) {
-            ((HomeViewHolder) holder).bindData(testList.get(position));
+            ((HomeViewHolder) holder).bindData(testList.get(position - 1));
         } else if (holder instanceof FootViewHolder) {
             ((FootViewHolder) holder).update(currentState);
         }
@@ -84,9 +89,25 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    /**
+     * 改变加载更多状态
+     *
+     * @param state
+     */
     public void changeFootViewState(int state) {
         currentState = state;
         notifyDataSetChanged();
+    }
+
+    /**
+     * 设置广告是否需要自动切换
+     *
+     * @param rollEnabled
+     */
+    public void setAutoRollEnabled(boolean rollEnabled) {
+        if (topViewHolder != null) {
+            topViewHolder.setAutoRollEnabled(rollEnabled);
+        }
     }
 
     class TopViewHolder extends RecyclerView.ViewHolder {
@@ -99,8 +120,28 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ButterKnife.bind(this, itemView);
         }
 
+        /**
+         * 绑定数据
+         *
+         * @param pictureInfoList
+         */
         public void bindData(List<PictureInfo> pictureInfoList) {
             topViewPager.initData(pictureInfoList);
+        }
+
+        /**
+         * 设置广告是否需要自动切换
+         *
+         * @param rollEnabled
+         */
+        public void setAutoRollEnabled(boolean rollEnabled) {
+            if (topViewPager != null) {
+                if (rollEnabled) {
+                    topViewPager.startAutoRoll();
+                } else {
+                    topViewPager.stopRoll();
+                }
+            }
         }
     }
 

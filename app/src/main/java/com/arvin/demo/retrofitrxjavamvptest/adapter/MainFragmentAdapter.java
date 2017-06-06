@@ -39,4 +39,6 @@ public class MainFragmentAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return titles == null ? null : titles[position];
     }
+
+
 }
