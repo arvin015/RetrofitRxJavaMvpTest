@@ -10,10 +10,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arvin.demo.retrofitrxjavamvptest.R;
-import com.arvin.demo.retrofitrxjavamvptest.bean.PictureInfo;
+import com.arvin.demo.retrofitrxjavamvptest.entity.LatestNews;
+import com.arvin.demo.retrofitrxjavamvptest.entity.StoriesBean;
+import com.arvin.demo.retrofitrxjavamvptest.entity.TopStoriesBean;
 import com.arvin.demo.retrofitrxjavamvptest.widget.PictureRollView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -37,15 +38,13 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private int currentState = 0;
 
     private Context context;
-    private ArrayList<String> testList;
-    private ArrayList<PictureInfo> picList;
+    private LatestNews latestNews;
 
     private TopViewHolder topViewHolder;
 
-    public HomeAdapter(Context context, ArrayList<String> testList, ArrayList<PictureInfo> picList) {
+    public HomeAdapter(Context context, LatestNews latestNews) {
         this.context = context;
-        this.testList = testList;
-        this.picList = picList;
+        this.latestNews = latestNews;
     }
 
     @Override
@@ -64,10 +63,14 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (latestNews == null) {
+            return;
+        }
+
         if (holder instanceof TopViewHolder) {
-            ((TopViewHolder) holder).bindData(picList);
+            ((TopViewHolder) holder).bindData(latestNews.getTop_stories());
         } else if (holder instanceof HomeViewHolder) {
-            ((HomeViewHolder) holder).bindData(testList.get(position - 1));
+            ((HomeViewHolder) holder).bindData(latestNews.getStories().get(position));
         } else if (holder instanceof FootViewHolder) {
             ((FootViewHolder) holder).update(currentState);
         }
@@ -75,7 +78,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return testList.size() + 2;
+        return latestNews == null ? 0 : latestNews.getStories().size() + 2;
     }
 
     @Override
@@ -87,6 +90,15 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else {
             return VIEW_TYPE_ITEM;
         }
+    }
+
+    /**
+     * 设置最新消息
+     *
+     * @param latestNews
+     */
+    public void setLatestNews(LatestNews latestNews) {
+        this.latestNews = latestNews;
     }
 
     /**
@@ -123,10 +135,10 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         /**
          * 绑定数据
          *
-         * @param pictureInfoList
+         * @param topStoriesBeanList
          */
-        public void bindData(List<PictureInfo> pictureInfoList) {
-            topViewPager.initData(pictureInfoList);
+        public void bindData(List<TopStoriesBean> topStoriesBeanList) {
+            topViewPager.initData(topStoriesBeanList);
         }
 
         /**
@@ -164,13 +176,13 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             itemView.setLayoutParams(lp);
         }
 
-        public void bindData(final String value) {
-            testText.setText(value);
+        public void bindData(final StoriesBean storiesBean) {
+            testText.setText(storiesBean.getTitle());
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, "点击了" + value, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "点击了" + storiesBean.getTitle(), Toast.LENGTH_SHORT).show();
                 }
             });
         }

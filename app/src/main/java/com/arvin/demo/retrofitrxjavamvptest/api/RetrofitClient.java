@@ -1,4 +1,4 @@
-package com.arvin.demo.retrofitrxjavamvptest.utils;
+package com.arvin.demo.retrofitrxjavamvptest.api;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    private static String baseUrl = "https://interface.meiriyiwen.com/";
+    private static String baseUrl = "http://news-at.zhihu.com/";
 
     private static Retrofit retrofit;
 

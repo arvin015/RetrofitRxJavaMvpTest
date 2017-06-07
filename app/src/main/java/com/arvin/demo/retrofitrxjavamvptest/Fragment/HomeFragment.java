@@ -1,4 +1,4 @@
-package com.arvin.demo.retrofitrxjavamvptest.Fragment;
+package com.arvin.demo.retrofitrxjavamvptest.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,11 +13,9 @@ import com.arvin.demo.retrofitrxjavamvptest.R;
 import com.arvin.demo.retrofitrxjavamvptest.adapter.DividerItemDecoration;
 import com.arvin.demo.retrofitrxjavamvptest.adapter.HomeAdapter;
 import com.arvin.demo.retrofitrxjavamvptest.base.BaseFragment;
-import com.arvin.demo.retrofitrxjavamvptest.bean.PictureInfo;
+import com.arvin.demo.retrofitrxjavamvptest.entity.LatestNews;
 import com.arvin.demo.retrofitrxjavamvptest.pressenter.HomePressenter;
 import com.arvin.demo.retrofitrxjavamvptest.view.IHomeView;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,10 +33,7 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePressenter> implem
     RecyclerView homeRecycleView;
     Unbinder unbinder;
 
-    private ArrayList<String> dataList;
     private HomeAdapter adapter;
-
-    private ArrayList<PictureInfo> picList;
 
     private boolean isLoadingMore = false;
 
@@ -47,31 +42,17 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePressenter> implem
         super.onActivityCreated(savedInstanceState);
 
         initView();
+
+        loadData();
+        setRefreshState(true);
     }
 
     private void initView() {
 
-        dataList = new ArrayList<>();
-
-        for (int i = 0; i < 30; i++) {
-            dataList.add("test" + (i + 1));
-        }
-
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         homeRecycleView.setLayoutManager(layoutManager);
 
-        picList = new ArrayList<>();
-        picList.add(new PictureInfo(
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496685071389&di=d48f375afe59a0f07b8d01b38a13afa2&imgtype=0&src=http%3A%2F%2Fwww.renwen.com%2Fphoto%2F11%2F343%2F1134333_1397898795990833.jpg",
-                "多肉植物1"));
-        picList.add(new PictureInfo(
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496685071388&di=2c92b4e248ba3940d090d17b3eb9208e&imgtype=0&src=http%3A%2F%2Fstaticqn.qizuang.com%2Fimg%2F20170420%2F58f86280562cd-s3.jpg",
-                "多肉植物2"));
-        picList.add(new PictureInfo(
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496685071387&di=171876b2abda10b9a873bd00a9bab2ea&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20160223%2Fmp60107766_1456203432430_4.png",
-                "多肉植物3"));
-
-        adapter = new HomeAdapter(getContext(), dataList, picList);
+        adapter = new HomeAdapter(getContext(), null);
         homeRecycleView.setAdapter(adapter);
 
         homeRecycleView.addItemDecoration(new DividerItemDecoration(getContext(),
@@ -102,6 +83,10 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePressenter> implem
         });
     }
 
+    private void loadData() {
+        pressenter.getLatestNews();
+    }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -113,9 +98,7 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePressenter> implem
 
     @Override
     public void setRefreshing() {
-        if (pressenter != null) {
-            pressenter.getMainInfos(1);
-        }
+
     }
 
     @Override
@@ -139,11 +122,12 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePressenter> implem
     }
 
     @Override
-    public void returnMainInfos(ArrayList<String> infoList) {
-        dataList.addAll(infoList);
-        setCompleteRefresh();
-        adapter.changeFootViewState(HomeAdapter.LOAD_MORE);
-        isLoadingMore = false;
+    public void returnLatestNews(LatestNews latestNews) {
+        if (latestNews != null) {
+            adapter.setLatestNews(latestNews);
+            adapter.notifyDataSetChanged();
+            setRefreshState(false);
+        }
     }
 
     @Override

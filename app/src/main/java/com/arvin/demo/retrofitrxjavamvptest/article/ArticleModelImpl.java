@@ -2,7 +2,7 @@ package com.arvin.demo.retrofitrxjavamvptest.article;
 
 import android.util.Log;
 
-import com.arvin.demo.retrofitrxjavamvptest.utils.RetrofitClient;
+import com.arvin.demo.retrofitrxjavamvptest.api.RetrofitClient;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,9 +14,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by arvin on 2017/5/24.

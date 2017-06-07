@@ -1,11 +1,10 @@
-package com.arvin.demo.retrofitrxjavamvptest.Fragment;
+package com.arvin.demo.retrofitrxjavamvptest.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.arvin.demo.retrofitrxjavamvptest.R;
 import com.arvin.demo.retrofitrxjavamvptest.base.BaseFragment;
-import com.arvin.demo.retrofitrxjavamvptest.base.BasePressenter;
 import com.arvin.demo.retrofitrxjavamvptest.pressenter.PhotoPressenter;
 import com.arvin.demo.retrofitrxjavamvptest.view.IPhotoView;
 

@@ -1,6 +1,7 @@
 package com.arvin.demo.retrofitrxjavamvptest.view;
 
 import com.arvin.demo.retrofitrxjavamvptest.base.IBaseView;
+import com.arvin.demo.retrofitrxjavamvptest.entity.LatestNews;
 
 import java.util.ArrayList;
 
@@ -10,5 +11,5 @@ import java.util.ArrayList;
 
 public interface IHomeView extends IBaseView {
 
-    void returnMainInfos(ArrayList<String> infoList);
+    void returnLatestNews(LatestNews latestNews);
 }

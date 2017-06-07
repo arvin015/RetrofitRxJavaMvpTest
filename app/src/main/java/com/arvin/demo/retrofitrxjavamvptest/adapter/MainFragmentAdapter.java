@@ -3,7 +3,6 @@ package com.arvin.demo.retrofitrxjavamvptest.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.ViewGroup;
 
 import com.arvin.demo.retrofitrxjavamvptest.base.BaseFragment;
 

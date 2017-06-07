@@ -1,13 +1,11 @@
 package com.arvin.demo.retrofitrxjavamvptest.pressenter;
 
+import com.arvin.demo.retrofitrxjavamvptest.api.RetrofitClient;
+import com.arvin.demo.retrofitrxjavamvptest.api.ZhiHuAPI;
 import com.arvin.demo.retrofitrxjavamvptest.base.BasePressenter;
+import com.arvin.demo.retrofitrxjavamvptest.entity.LatestNews;
 import com.arvin.demo.retrofitrxjavamvptest.view.IHomeView;
 
-import java.util.ArrayList;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -19,28 +17,29 @@ import io.reactivex.schedulers.Schedulers;
 
 public class HomePressenter extends BasePressenter<IHomeView> {
 
-    public void getMainInfos(int page) {
+    private ZhiHuAPI zhiHuAPIService;
 
-        Observable.create(new ObservableOnSubscribe<ArrayList<String>>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<ArrayList<String>> e) throws Exception {
-                Thread.sleep(2000);
-                ArrayList<String> addList = new ArrayList<>();
-                for (int i = 0; i < 20; i++) {
-                    addList.add("add" + (i + 1));
-                }
-                e.onNext(addList);
-                e.onComplete();
-            }
-        }).subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ArrayList<String>>() {
-                    @Override
-                    public void accept(@NonNull ArrayList<String> list) throws Exception {
-                        if (mView != null) {
-                            mView.returnMainInfos(list);
+    public HomePressenter() {
+        zhiHuAPIService = RetrofitClient.createService(ZhiHuAPI.class);
+    }
+
+    /**
+     * 获取最新消息
+     */
+    public void getLatestNews() {
+
+        if (zhiHuAPIService != null) {
+            zhiHuAPIService.getLasteNews()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<LatestNews>() {
+                        @Override
+                        public void accept(@NonNull LatestNews latestNews) throws Exception {
+                            if (mView != null) {
+                                mView.returnLatestNews(latestNews);
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 }

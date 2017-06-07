@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.arvin.demo.retrofitrxjavamvptest.R;
-import com.arvin.demo.retrofitrxjavamvptest.bean.PictureInfo;
+import com.arvin.demo.retrofitrxjavamvptest.entity.TopStoriesBean;
 import com.arvin.demo.retrofitrxjavamvptest.utils.SizeUtils;
 import com.bumptech.glide.Glide;
 
@@ -36,7 +36,7 @@ public class PictureRollView extends FrameLayout {
     private Context context;
     private List<ImageView> dotList;
     private List<View> viewList;
-    private List<PictureInfo> pictureList;
+    private List<TopStoriesBean> topStoriesBeanList;
     private ViewPager picViewPager;
     private LinearLayout dotLayout;
     private ImageView selectedDotImg;
@@ -72,16 +72,16 @@ public class PictureRollView extends FrameLayout {
         addView(dotLayout);
     }
 
-    public void initData(List<PictureInfo> pictureList) {
-        this.pictureList = pictureList;
+    public void initData(List<TopStoriesBean> topStoriesBeanList) {
+        this.topStoriesBeanList = topStoriesBeanList;
 
         viewList = new ArrayList<>();
         dotList = new ArrayList<>();
         dotLayout.removeAllViews();
 
-        for (int i = 0; i < pictureList.size(); i++) {
+        for (int i = 0; i < topStoriesBeanList.size(); i++) {
 
-            PictureInfo pictureInfo = pictureList.get(i);
+            TopStoriesBean topStoriesBean = topStoriesBeanList.get(i);
 
             ImageView imageView = new ImageView(context);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -93,7 +93,7 @@ public class PictureRollView extends FrameLayout {
             viewList.add(imageView);
 
             Glide.with(context)
-                    .load(pictureInfo.getPath())
+                    .load(topStoriesBean.getImage())
                     .into(imageView);
 
             ImageView dotImg = new ImageView(context);

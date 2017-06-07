@@ -1,4 +1,4 @@
-package com.arvin.demo.retrofitrxjavamvptest.bean;
+package com.arvin.demo.retrofitrxjavamvptest.entity;
 
 /**
  * Created by arvin on 2017/6/5.

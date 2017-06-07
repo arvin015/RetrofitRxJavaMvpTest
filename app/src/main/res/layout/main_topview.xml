@@ -7,6 +7,6 @@
     <com.arvin.demo.retrofitrxjavamvptest.widget.PictureRollView
         android:id="@+id/topViewPager"
         android:layout_width="wrap_content"
-        android:layout_height="200dp" />
+        android:layout_height="160dp" />
 
 </LinearLayout>

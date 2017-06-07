@@ -1,4 +1,4 @@
-package com.arvin.demo.retrofitrxjavamvptest;
+package com.arvin.demo.retrofitrxjavamvptest.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -10,9 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.arvin.demo.retrofitrxjavamvptest.Fragment.BlogFragment;
-import com.arvin.demo.retrofitrxjavamvptest.Fragment.HomeFragment;
-import com.arvin.demo.retrofitrxjavamvptest.Fragment.PhotoFragment;
+import com.arvin.demo.retrofitrxjavamvptest.R;
+import com.arvin.demo.retrofitrxjavamvptest.fragment.BlogFragment;
+import com.arvin.demo.retrofitrxjavamvptest.fragment.HomeFragment;
+import com.arvin.demo.retrofitrxjavamvptest.fragment.PhotoFragment;
 import com.arvin.demo.retrofitrxjavamvptest.adapter.MainFragmentAdapter;
 import com.arvin.demo.retrofitrxjavamvptest.base.BaseFragment;
 import com.arvin.demo.retrofitrxjavamvptest.utils.Utils;
