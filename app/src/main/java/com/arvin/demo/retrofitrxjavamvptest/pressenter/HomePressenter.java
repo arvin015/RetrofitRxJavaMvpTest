@@ -36,7 +36,7 @@ public class HomePressenter extends BasePressenter<IHomeView> {
                         @Override
                         public void accept(@NonNull LatestNews latestNews) throws Exception {
                             if (mView != null) {
-                                mView.returnLatestNews(latestNews);
+                                mView.setData(latestNews);
                             }
                         }
                     });

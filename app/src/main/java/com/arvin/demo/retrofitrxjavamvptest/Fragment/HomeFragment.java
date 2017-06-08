@@ -5,9 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.arvin.demo.retrofitrxjavamvptest.R;
 import com.arvin.demo.retrofitrxjavamvptest.adapter.DividerItemDecoration;
@@ -18,8 +15,6 @@ import com.arvin.demo.retrofitrxjavamvptest.pressenter.HomePressenter;
 import com.arvin.demo.retrofitrxjavamvptest.view.IHomeView;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by arvin on 2017/5/27.
@@ -31,7 +26,6 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePressenter> implem
 
     @BindView(R.id.homeRecycleView)
     RecyclerView homeRecycleView;
-    Unbinder unbinder;
 
     private HomeAdapter adapter;
 
@@ -122,26 +116,17 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePressenter> implem
     }
 
     @Override
-    public void returnLatestNews(LatestNews latestNews) {
-        if (latestNews != null) {
-            adapter.setLatestNews(latestNews);
+    public void setData(LatestNews data) {
+        if (data != null) {
+            adapter.setLatestNews(data);
             adapter.notifyDataSetChanged();
             setRefreshState(false);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
     }
 
 

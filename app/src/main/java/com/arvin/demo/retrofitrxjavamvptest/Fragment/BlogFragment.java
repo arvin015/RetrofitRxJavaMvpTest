@@ -38,4 +38,9 @@ public class BlogFragment extends BaseFragment<IBlogView, BlogPressenter> implem
     public void hideLoading() {
 
     }
+
+    @Override
+    public void setData(Object data) {
+
+    }
 }

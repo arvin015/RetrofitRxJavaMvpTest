@@ -38,4 +38,9 @@ public class PhotoFragment extends BaseFragment<IPhotoView, PhotoPressenter> imp
     public void hideLoading() {
 
     }
+
+    @Override
+    public void setData(Object data) {
+
+    }
 }
