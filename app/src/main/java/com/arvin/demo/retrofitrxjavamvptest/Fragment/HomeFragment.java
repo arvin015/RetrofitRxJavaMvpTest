@@ -49,8 +49,8 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePressenter> implem
         adapter = new HomeAdapter(getContext(), null);
         homeRecycleView.setAdapter(adapter);
 
-        homeRecycleView.addItemDecoration(new DividerItemDecoration(getContext(),
-                DividerItemDecoration.VERTICAL_LIST));
+//        homeRecycleView.addItemDecoration(new DividerItemDecoration(getContext(),
+//                DividerItemDecoration.VERTICAL_LIST));
 
         homeRecycleView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             int lastVisibleItemPosition = 0;

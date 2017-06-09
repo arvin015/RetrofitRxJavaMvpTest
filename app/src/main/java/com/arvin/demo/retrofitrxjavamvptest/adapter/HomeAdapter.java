@@ -1,11 +1,13 @@
 package com.arvin.demo.retrofitrxjavamvptest.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +16,7 @@ import com.arvin.demo.retrofitrxjavamvptest.entity.LatestNews;
 import com.arvin.demo.retrofitrxjavamvptest.entity.StoriesBean;
 import com.arvin.demo.retrofitrxjavamvptest.entity.TopStoriesBean;
 import com.arvin.demo.retrofitrxjavamvptest.widget.PictureRollView;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -159,8 +162,12 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class HomeViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.testText)
-        TextView testText;
+        @BindView(R.id.titleText)
+        TextView titleText;
+        @BindView(R.id.thumbImg)
+        ImageView thumbImg;
+        @BindView(R.id.cardView)
+        CardView cardView;
 
         private View itemView;
 
@@ -177,7 +184,11 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         public void bindData(final StoriesBean storiesBean) {
-            testText.setText(storiesBean.getTitle());
+            titleText.setText(storiesBean.getTitle());
+            Glide.with(context)
+                    .load(storiesBean.getImages().get(0))
+                    .centerCrop()
+                    .into(thumbImg);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

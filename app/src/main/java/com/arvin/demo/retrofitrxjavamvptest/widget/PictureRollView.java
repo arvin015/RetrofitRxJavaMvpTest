@@ -84,7 +84,6 @@ public class PictureRollView extends FrameLayout {
             TopStoriesBean topStoriesBean = topStoriesBeanList.get(i);
 
             ImageView imageView = new ImageView(context);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -94,6 +93,7 @@ public class PictureRollView extends FrameLayout {
 
             Glide.with(context)
                     .load(topStoriesBean.getImage())
+                    .centerCrop()
                     .into(imageView);
 
             ImageView dotImg = new ImageView(context);

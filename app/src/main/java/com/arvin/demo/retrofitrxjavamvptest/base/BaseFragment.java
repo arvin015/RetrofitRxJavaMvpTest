@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.arvin.demo.retrofitrxjavamvptest.R;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by arvin on 2017/5/27.
@@ -21,6 +22,7 @@ public abstract class BaseFragment<V, P extends BasePressenter<V>> extends Fragm
 
     public P pressenter;
     private SwipeRefreshLayout refreshLayout;
+    private Unbinder unbinder;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,7 +35,7 @@ public abstract class BaseFragment<V, P extends BasePressenter<V>> extends Fragm
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutId(), null);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         if (isSetRefresh()) {
             initSwipeRefresh(view);
@@ -52,10 +54,13 @@ public abstract class BaseFragment<V, P extends BasePressenter<V>> extends Fragm
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         if (pressenter != null) {
             pressenter.dettach();
         }
+        if (unbinder != null) {
+            unbinder.unbind();
+        }
+        super.onDestroy();
     }
 
     private void initSwipeRefresh(View view) {
