@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="10dp">
 
     <com.arvin.demo.retrofitrxjavamvptest.widget.PictureRollView
         android:id="@+id/topViewPager"
         android:layout_width="wrap_content"
         android:layout_height="160dp" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/topViewPager"
+        android:background="#50000000"
+        android:padding="5dp"
+        android:textColor="#ffffff"
+        android:textSize="18sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topViewPager"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:text="今日新闻"
+        android:textSize="18sp" />
+
+</RelativeLayout>

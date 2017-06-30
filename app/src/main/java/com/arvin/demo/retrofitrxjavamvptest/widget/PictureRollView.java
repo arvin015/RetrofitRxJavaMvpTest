@@ -1,6 +1,7 @@
 package com.arvin.demo.retrofitrxjavamvptest.widget;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
@@ -86,7 +87,7 @@ public class PictureRollView extends FrameLayout {
             ImageView imageView = new ImageView(context);
 
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.gravity = Gravity.CENTER;
             imageView.setLayoutParams(lp);
             viewList.add(imageView);
@@ -96,7 +97,7 @@ public class PictureRollView extends FrameLayout {
                     .centerCrop()
                     .into(imageView);
 
-            ImageView dotImg = new ImageView(context);
+            final ImageView dotImg = new ImageView(context);
             if (i == 0) {
                 dotImg.setImageResource(R.drawable.dot_selected);
                 selectedDotImg = dotImg;
@@ -105,10 +106,14 @@ public class PictureRollView extends FrameLayout {
             }
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
-            if (i != 0) {
-                params.leftMargin = SizeUtils.dp2px(5);
-            }
             dotImg.setLayoutParams(params);
+            dotImg.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    picViewPager.setCurrentItem((int) dotImg.getTag());
+                }
+            });
+            dotImg.setTag(i);
             dotList.add(dotImg);
             dotLayout.addView(dotImg);
 
@@ -127,6 +132,10 @@ public class PictureRollView extends FrameLayout {
                 dotImg.setImageResource(R.drawable.dot_selected);
                 selectedDotImg.setImageResource(R.drawable.dot_normal);
                 selectedDotImg = dotImg;
+
+                if (pictureRollViewListener != null) {
+                    pictureRollViewListener.onPageSelected(position);
+                }
             }
 
             @Override
@@ -229,5 +238,15 @@ public class PictureRollView extends FrameLayout {
             timer.cancel();
             timer = null;
         }
+    }
+
+    IPictureRollView pictureRollViewListener;
+
+    public void setPictureRollViewListener(IPictureRollView pictureRollViewListener) {
+        this.pictureRollViewListener = pictureRollViewListener;
+    }
+
+    public interface IPictureRollView {
+        void onPageSelected(int position);
     }
 }

@@ -129,6 +129,8 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         @BindView(R.id.topViewPager)
         PictureRollView topViewPager;
+        @BindView(R.id.titleText)
+        TextView titleText;
 
         public TopViewHolder(View itemView) {
             super(itemView);
@@ -140,8 +142,25 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
          *
          * @param topStoriesBeanList
          */
-        public void bindData(List<TopStoriesBean> topStoriesBeanList) {
+        public void bindData(final List<TopStoriesBean> topStoriesBeanList) {
             topViewPager.initData(topStoriesBeanList);
+            topViewPager.setPictureRollViewListener(new PictureRollView.IPictureRollView() {
+                @Override
+                public void onPageSelected(int position) {
+                    setTitle(topStoriesBeanList.get(position).getTitle());
+                }
+            });
+            TopStoriesBean topStoriesBean = topStoriesBeanList.get(0);
+            if (topStoriesBean != null) {
+                setTitle(topStoriesBean.getTitle());
+            }
+        }
+
+        /**
+         * 设置标题
+         */
+        public void setTitle(String title) {
+            titleText.setText(title);
         }
 
         /**
